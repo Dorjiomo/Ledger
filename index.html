@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8e7a4">
+<title>The Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbe4ea;--paper:#fff8f1;--ink:#4a2433;--mute:#8a6572;--line:#ecc9d3;--butter:#f8e7a4;--butter2:#fdf3cc;--gold:#b58a2e;--accent:#9c4a65;--sage:#5f7f62;--red:#a63d52;--blue:#7a6a9a;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);background-image:radial-gradient(circle at 12% 8%,#fff3f6 0,transparent 38%),radial-gradient(circle at 90% 70%,var(--butter2) 0,transparent 35%);background-attachment:fixed;color:var(--ink);font:19px/1.4 var(--serif);font-variant-numeric:lining-nums;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+header{padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px;background:var(--butter);border-bottom:3px double var(--gold);display:flex;align-items:center;justify-content:space-between;gap:10px}
+header h1{font:400 38px/1 "Pinyon Script",var(--serif);margin:0;color:var(--accent)}
+header input{background:var(--paper);color:var(--ink);border:1px solid var(--gold);border-radius:20px;padding:7px 12px;font:600 17px var(--serif);width:auto}
+main{max-width:640px;margin:0 auto;padding:16px}
+section{display:none}section.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);outline:1px solid var(--butter);outline-offset:-6px;border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 0 var(--line)}
+.hero{background:var(--butter2);border-color:var(--gold);outline-color:var(--gold);text-align:center;padding:24px 18px}
+.hero:before{content:"\2766";display:block;color:var(--gold);font-size:22px}
+.left{font-size:46px;font-weight:700;line-height:1.1;margin:4px 0}
+.mute{color:var(--mute);font-size:17px;font-style:italic}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid .card{margin:0;padding:14px 16px}
+.k{font-size:16px;color:var(--mute);font-style:italic}.v{font-size:24px;font-weight:700}
+.inc{color:var(--sage)}.exp{color:var(--red)}.sav{color:var(--blue)}
+label{display:block;font-size:17px;color:var(--mute);font-style:italic;margin:12px 0 4px}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:600 19px var(--serif)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+button{font:inherit;cursor:pointer}
+.btn{width:100%;margin-top:16px;padding:13px;border:1px solid var(--gold);border-radius:30px;background:var(--accent);color:#fff8f1;font-weight:700;font-size:20px;letter-spacing:.3px}
+.btn.alt{background:var(--butter2);color:var(--ink)}
+.seg{display:flex;gap:8px}.seg button{flex:1;padding:10px;border:1px solid var(--line);border-radius:30px;background:#fff;color:var(--ink);font-weight:600}
+.seg button.on{background:var(--butter);border-color:var(--gold);color:var(--ink);font-weight:700}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px dotted var(--gold)}
+.row:last-child{border:0}.row b{font-weight:700}
+.del{background:none;border:0;color:var(--mute);font-size:22px;padding:2px 8px}
+.bar{height:9px;background:var(--butter2);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#f4b6c6,var(--gold))}.bar i.over{background:var(--red)}
+.bud{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.bud input{width:112px;text-align:right}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--butter);border-top:3px double var(--gold);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;padding:13px 4px;background:none;border:0;color:var(--mute);font-size:19px;font-weight:600}
+nav button.on{color:var(--accent);font-weight:700;font-style:italic;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:6px}
+h2{font:700 24px var(--serif);margin:0 0 10px;text-align:center}
+h2:after{content:"";display:block;width:60px;height:1px;background:var(--gold);margin:6px auto 0}
+.empty{color:var(--mute);text-align:center;padding:18px 0;font-style:italic}
+.chips{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}.chips button{padding:5px 14px;border:1px solid var(--line);border-radius:20px;background:#fff;color:var(--ink);font-weight:600}.chips button.on{background:var(--butter);border-color:var(--gold)}
+.grow{flex:1;min-width:0;cursor:pointer}
+.row{transition:opacity .18s,transform .18s,max-height .18s;max-height:90px}.row.out{opacity:0;transform:translateX(40px);max-height:0;padding:0}
+.danger{color:var(--red);border-color:var(--red)}
+.goal .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.goal .nm{font-size:23px;font-weight:700}
+.goal .bar{height:12px}.goal .bar i{transition:width .6s ease}
+.gb{display:flex;gap:8px;margin-top:12px}.gb button{flex:1;padding:8px;border:1px solid var(--gold);border-radius:20px;background:var(--butter2);color:var(--ink);font-weight:600}.gb .x{color:var(--red);border-color:var(--line);background:#fff}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;pointer-events:none;background:var(--ink);color:var(--paper);padding:10px 14px;border-radius:30px;display:flex;gap:14px;align-items:center;transition:.25s;z-index:9;white-space:nowrap}
+#toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#toast button{background:none;border:0;color:var(--butter);font-weight:700;text-decoration:underline;padding:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.combo{position:relative}.combo input{padding-right:48px}
+#goalBtn{position:absolute;right:4px;top:4px;bottom:4px;width:42px;border:0;border-left:1px solid var(--line);background:none;color:var(--accent);display:flex;align-items:center;justify-content:center}
+#goalBtn svg{transition:transform .2s}#goalBtn[aria-expanded=true] svg{transform:rotate(180deg)}
+#goalMenu{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:6;background:#fff;border:1px solid var(--gold);border-radius:12px;max-height:250px;overflow:auto;box-shadow:0 8px 20px rgba(74,36,51,.18)}
+#goalMenu button{display:block;width:100%;text-align:left;padding:12px 14px;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);font-weight:600}
+#goalMenu button:last-child{border:0}#goalMenu .sg{color:var(--mute);font-style:italic;font-weight:500}
+#goalMenu .hd{padding:6px 14px;font-size:15px;color:var(--mute);font-style:italic;background:var(--butter2)}
+.addcat{display:flex;gap:8px}.addcat .btn{width:90px;margin:0}
+.hm{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px;color:var(--ink)}
+.hm .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:20px}.hmv{display:flex;gap:14px;flex-wrap:wrap;font-weight:600;font-size:17px;margin-top:2px}
+.bt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.bt b{font-size:24px;display:block}
+details summary{cursor:pointer;color:var(--accent);font-weight:700}
+.lnk{background:none;border:0;padding:0;color:var(--mute);font:inherit;font-style:italic;text-align:left;text-decoration:underline dotted var(--gold);text-underline-offset:4px}
+.sub{background:var(--butter2);border-radius:10px;padding:2px 12px;margin-top:8px}
+</style>
+</head>
+<body>
+<header><h1>The Ledger</h1><input type="month" id="month" aria-label="Month"></header>
+<main>
+<section id="home" class="on">
+  <div class="card hero"><div class="k">Left to spend this month</div><div class="left" id="left">Nu. 0</div><div class="mute" id="rate"></div></div>
+  <div class="grid">
+    <div class="card"><div class="k">Income</div><div class="v inc" id="sInc">0</div></div>
+    <div class="card"><div class="k">Spent</div><div class="v exp" id="sExp">0</div></div>
+    <div class="card"><div class="k">Saved</div><div class="v sav" id="sSav">0</div></div>
+    <div class="card"><div class="k">Savings rate</div><div class="v" id="sRate">0%</div></div>
+  </div>
+  <div class="card" id="brkCard"><h2>Where it went</h2><div id="brk"></div></div>
+  <div class="card" id="savCard"><h2>Saved by goal</h2><div id="savBy"></div></div>
+  <div class="card"><h2>Transactions</h2>
+    <div class="chips" id="chips"><button data-f="all" class="on">All</button><button data-f="income">Income</button><button data-f="expense">Spent</button><button data-f="saving">Saved</button></div>
+    <div id="list"></div><div class="mute" style="text-align:center;margin-top:8px">Tap an entry to edit it. Tap × to delete.</div></div>
+</section>
+
+<section id="add">
+  <div class="card">
+    <div class="seg" id="typeSeg"><button data-t="expense" class="on">Expense</button><button data-t="income">Income</button><button data-t="saving">Saving</button></div>
+    <label for="amt">Amount (Nu.)</label><input id="amt" type="number" inputmode="decimal" min="0" placeholder="0">
+    <div id="catRow"><label for="cat">Category</label><select id="cat"></select></div>
+    <label for="date">Date</label><input id="date" type="date">
+    <div id="goalRow" hidden><label for="goalIn">Savings goal</label><div class="combo"><input id="goalIn" placeholder="Choose a goal or type a new one" autocomplete="off"><button type="button" id="goalBtn" aria-label="Show goals" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div id="goalMenu" hidden></div></div><div class="mute" id="goalHint"></div></div>
+    <label for="method">Paid with</label>
+    <select id="method"><option>Cash</option><option>mBoB</option><option>mPay</option><option>DK Bank app</option><option>Card</option><option>QR</option><option>Salary / bank</option></select>
+    <label for="note">Note (optional)</label><input id="note" placeholder="e.g. Centenary Market">
+    <button class="btn" id="save">Save entry</button>
+    <button class="btn alt" id="cancel" hidden>Cancel editing</button>
+    <button class="btn alt danger" id="delBtn" hidden>Delete this entry</button>
+  </div>
+</section>
+
+<section id="budget">
+  <div class="card hero" id="budTotal"></div>
+  <div id="budCopy"></div>
+  <div class="card"><h2>Categories</h2>
+    <div class="addcat"><input id="newCat" placeholder="New category, e.g. Pets" autocomplete="off"><button class="btn" id="addCat">Add</button></div>
+    <div class="mute" style="margin:8px 0 2px">Set a plan for each category. Tap ＋ to log spending, or tap the amount spent to see and edit those entries. ✎ renames, × removes.</div>
+    <div id="budList"></div>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="card"><h2 id="gTitle">New savings goal</h2>
+    <label for="gName">Goal</label><input id="gName" placeholder="e.g. Trip to Hong Kong">
+    <label for="gTarget">Target (Nu.)</label><input id="gTarget" type="number" inputmode="decimal" min="0" placeholder="0">
+    <label for="gDate">Deadline (optional)</label><input id="gDate" type="date">
+    <button class="btn" id="gSave">Add goal</button><button class="btn alt" id="gCancel" hidden>Cancel</button>
+  </div>
+  <div id="goalList"></div>
+</section>
+
+<section id="data">
+  <div class="card"><h2>Past months</h2><div class="mute" style="margin-bottom:8px;text-align:center">Every month starts as a clean sheet. Tap one to open its records.</div><div id="hist"></div></div>
+  <div class="card">
+    <h2>GitHub sync</h2>
+    <div class="mute">Keeps a copy of your records in a <b>private</b> GitHub repository, so you can restore them on any phone. Use a separate repo for data, never your public website repo.</div>
+    <label for="ghRepo">Data repository (owner/name)</label><input id="ghRepo" placeholder="yourname/ledger-data" autocapitalize="off" autocomplete="off">
+    <label for="ghPath">File name</label><input id="ghPath" placeholder="ledger.json" autocapitalize="off" autocomplete="off">
+    <label for="ghTok">Access token</label><input id="ghTok" type="password" placeholder="github_pat_…" autocomplete="off">
+    <label style="display:flex;gap:10px;align-items:center"><input id="ghAuto" type="checkbox" style="width:auto"> Save to GitHub automatically after each change</label>
+    <button class="btn" id="ghPush">Save to GitHub now</button>
+    <button class="btn alt" id="ghPull">Load from GitHub</button>
+    <div class="mute" id="ghMsg" style="margin-top:8px"></div>
+    <details style="margin-top:10px"><summary>How to set it up</summary>
+      <ol class="mute" style="padding-left:20px">
+        <li>On GitHub, create a new <b>private</b> repository, for example <i>ledger-data</i>, and tick “Add a README”.</li>
+        <li>Go to Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.</li>
+        <li>Under Repository access choose “Only select repositories” and pick <i>ledger-data</i>. Under Permissions set <b>Contents</b> to “Read and write”.</li>
+        <li>Copy the token, paste it above with your repository name, then tap Save to GitHub.</li>
+      </ol>
+      <div class="mute">The token stays on this phone only. It is not part of backups and never goes into the repo. If two phones save at once, the last save wins.</div>
+    </details>
+  </div>
+  <div class="card">
+    <h2>Backup</h2>
+    <div class="mute">Your data lives in this browser on this phone. Unless you turn on GitHub sync it is never uploaded. Clearing Chrome data deletes it, so keep a backup.</div>
+    <button class="btn" id="exJson">Download backup (.json)</button>
+    <button class="btn alt" id="exCsv">Download spreadsheet (.csv)</button>
+    <label for="imp">Restore from backup</label><input type="file" id="imp" accept=".json">
+    <button class="btn alt" id="wipe">Delete all data</button>
+  </div>
+</section>
+</main>
+<nav>
+  <button data-s="home" class="on">Home</button><button data-s="add">Add</button><button data-s="budget">Budget</button><button data-s="goals">Goals</button><button data-s="data">More</button>
+</nav>
+
+<div id="toast" role="status"><span id="tmsg"></span><button id="tundo">Undo</button></div>
+<script>
+const CATS={
+ income:["Salary (net)","Allowances","Bonus","Side income","Rental income","Remittance","Other income"],
+ expense:["Rent","Electricity & water","Mobile & internet","Loan EMI","Insurance","Groceries","Transport & fuel","Eating out","Clothing (gho/kira)","Healthcare","Education","Family support","Festivals & social","Offerings & donations","Other"],
+ saving:["Savings"]
+};
+const KEY="nu-tracker-v1",GK="nu-tracker-gh";
+const $=s=>document.querySelector(s);
+const today=new Date();
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const curM=iso(today).slice(0,7);
+const nu=n=>"Nu. "+Math.round(n).toLocaleString("en-IN");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const monthName=m=>{const[y,mo]=m.split("-");return new Date(+y,+mo-1,1).toLocaleString("en",{month:"long",year:"numeric"})};
+const gm=()=>$("#month").value||curM;
+let gh={};try{gh=JSON.parse(localStorage.getItem(GK))||{}}catch(e){}
+let openCat=null,type="expense",filt="all",editId=null,editGoal=null,tt,pushT;
+const defGoals=()=>[{id:Date.now(),name:"Trip to Hong Kong",target:0,deadline:""}];
+
+function norm(d){
+  const o={v:3,tx:Array.isArray(d.tx)?d.tx:[],goals:Array.isArray(d.goals)?d.goals:defGoals(),
+    expCats:Array.isArray(d.expCats)&&d.expCats.length?d.expCats:CATS.expense.slice(),
+    budgets:d.budgets&&typeof d.budgets==="object"?d.budgets:{}};
+  if(d.budget&&!d.budgets)o.budgets[curM]=d.budget;
+  if(!d.v||d.v<2)o.tx.filter(t=>t.type==="saving"&&!t.goal).forEach(t=>{let g=o.goals.find(x=>x.name.toLowerCase()===t.cat.toLowerCase());if(!g){g={id:Date.now()+Math.floor(Math.random()*1e6),name:t.cat,target:0,deadline:""};o.goals.push(g)}t.goal=g.id});
+  return o}
+let db=norm({});
+try{const raw=JSON.parse(localStorage.getItem(KEY));if(raw)db=norm(raw)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){alert("Could not save. Is private browsing on?")}
+  if(gh.auto&&gh.repo&&gh.tok){clearTimeout(pushT);pushT=setTimeout(()=>ghPush(true),3000)}};
+save();
+$("#month").value=curM;$("#date").value=iso(today);
+
+function toast(msg,fn){const el=$("#toast");$("#tmsg").textContent=msg;const b=$("#tundo");b.hidden=!fn;b.onclick=()=>{fn&&fn();el.classList.remove("on")};el.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("on"),6000)}
+function count(el,to){const from=+el.dataset.v||0;el.dataset.v=to;if(from===to||matchMedia("(prefers-reduced-motion:reduce)").matches){el.textContent=nu(to);return}const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/450),e=1-Math.pow(1-k,3);el.textContent=nu(from+(to-from)*e);if(k<1)requestAnimationFrame(f)})(t0)}
+const monthTx=()=>{const m=gm();return db.tx.filter(t=>t.date.startsWith(m)).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id)};
+const sum=(a,t)=>a.filter(x=>x.type===t).reduce((s,x)=>s+x.amt,0);
+const goalSaved=id=>db.tx.filter(t=>t.type==="saving"&&t.goal==id).reduce((s,t)=>s+t.amt,0);
+const goalName=id=>(db.goals.find(g=>g.id==id)||{}).name;
+
+function fillCats(){const v=$("#cat").value,list=type==="expense"?db.expCats:CATS[type];$("#cat").innerHTML=list.map(c=>`<option>${esc(c)}</option>`).join("");if(list.includes(v))$("#cat").value=v}
+const SUGG=["Emergency fund","Provident fund","NPPF","Recurring deposit","Fixed deposit","Gold & assets","Education fund"];
+function markGoal(){const raw=$("#goalIn").value.trim(),v=raw.toLowerCase();
+ $("#goalHint").textContent=v&&!db.goals.some(g=>g.name.toLowerCase()===v)?"A new goal “"+raw+"” will be created.":""}
+function fillGoalSel(){const sg=SUGG.filter(n=>!db.goals.some(g=>g.name.toLowerCase()===n.toLowerCase()));
+ $("#goalMenu").innerHTML=(db.goals.length?'<div class="hd">Your goals</div>'+db.goals.map(g=>`<button type="button" data-v="${esc(g.name)}">${esc(g.name)}</button>`).join(""):"")+'<div class="hd">Suggestions</div>'+sg.map(n=>`<button type="button" class="sg" data-v="${esc(n)}">${esc(n)}</button>`).join("");markGoal()}
+function menu(open){$("#goalMenu").hidden=!open;$("#goalBtn").setAttribute("aria-expanded",open)}
+function setType(t){type=t;document.querySelectorAll("#typeSeg button").forEach(x=>x.classList.toggle("on",x.dataset.t===t));fillCats();$("#goalRow").hidden=t!=="saving";$("#catRow").hidden=t==="saving"}
+function editUI(on){$("#save").textContent=on?"Save changes":"Save entry";$("#cancel").hidden=!on;$("#delBtn").hidden=!on}
+function resetForm(){editId=null;$("#goalIn").value="";markGoal();$("#amt").value="";$("#note").value="";editUI(false)}
+
+function rowHtml(t){return `<div class="row" data-id="${t.id}"><div class="grow" data-edit="${t.id}"><b>${esc(t.type==="saving"&&t.goal?goalName(t.goal)||t.cat:t.cat)}</b><div class="mute">${t.date.slice(5)} · ${esc(t.method)}${t.note?" · "+esc(t.note):""}</div></div><div style="display:flex;align-items:center"><span class="${t.type==="income"?"inc":t.type==="saving"?"sav":"exp"}">${t.type==="income"?"+":"−"}${nu(t.amt)}</span><button class="del" data-del="${t.id}" aria-label="Delete entry">×</button></div></div>`}
+
+function render(){
+  const m=gm(),tx=monthTx(),inc=sum(tx,"income"),exp=sum(tx,"expense"),sav=sum(tx,"saving"),left=inc-exp-sav;
+  count($("#sInc"),inc);count($("#sExp"),exp);count($("#sSav"),sav);count($("#left"),left);
+  $("#left").style.color=left<0?"var(--red)":"var(--ink)";
+  const r=inc?Math.round(sav/inc*100):0;$("#sRate").textContent=r+"%";
+  $("#rate").textContent=inc?(r>=15?"Savings on track (15%+ target)":"Below the 15% savings target"):(tx.length?"Add your income to see what is left":"A clean sheet for "+monthName(m));
+  document.querySelectorAll("#chips button").forEach(b=>b.classList.toggle("on",b.dataset.f===filt));
+  const shown=filt==="all"?tx:tx.filter(t=>t.type===filt);
+  $("#list").innerHTML=shown.length?shown.map(rowHtml).join(""):'<div class="empty">Nothing here yet. Tap Add to start.</div>';
+  const by={};tx.filter(t=>t.type==="expense").forEach(t=>by[t.cat]=(by[t.cat]||0)+t.amt);
+  const arr=Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,6),mx=arr.length?arr[0][1]:1;
+  $("#brkCard").style.display=arr.length?"":"none";
+  $("#brk").innerHTML=arr.map(([c,v])=>`<div style="padding:6px 0"><div class="bud"><span>${esc(c)}</span><b>${nu(v)}</b></div><div class="bar"><i style="width:${v/mx*100}%"></i></div></div>`).join("");
+  const sb=db.goals.map(g=>({g,m:tx.filter(t=>t.type==="saving"&&t.goal==g.id).reduce((a,t)=>a+t.amt,0),all:goalSaved(g.id)})).filter(x=>x.m>0||x.all>0).sort((a,b)=>b.m-a.m||b.all-a.all),smx=Math.max(1,...sb.map(x=>x.m));
+  $("#savCard").style.display=sb.length?"":"none";
+  $("#savBy").innerHTML=sb.map(x=>`<div style="padding:6px 0"><div class="bud"><div><b>${esc(x.g.name)}</b><div class="mute">${nu(x.all)} saved in total</div></div><b class="sav">${nu(x.m)}</b></div><div class="bar"><i style="width:${x.m/smx*100}%"></i></div></div>`).join("")+'<div class="mute" style="text-align:right">Amounts on the right are for this month</div>';
+  renderBudget(m,tx,by);renderHist();fillGoalSel();renderGoals();
+}
+
+function renderBudget(m,tx,by){
+  const plan=db.budgets[m]||{},has=!!db.budgets[m];
+  const planned=db.expCats.reduce((s,c)=>s+(+plan[c]||0),0),spent=sum(tx,"expense"),rem=planned-spent,pct=planned?Math.min(100,spent/planned*100):0;
+  $("#budTotal").innerHTML=`<div class="k">Total budget for ${monthName(m)}</div><div class="left">${nu(planned)}</div><div class="bar"><i class="${planned&&spent>planned?"over":""}" style="width:${pct}%"></i></div><div class="bt"><div><span class="k">Spent so far</span><b class="exp">${nu(spent)}</b></div><div><span class="k">${rem<0?"Over budget by":"Left in budget"}</span><b style="color:${rem<0?"var(--red)":"var(--sage)"}">${nu(Math.abs(rem))}</b></div></div>`;
+  const prev=Object.keys(db.budgets).filter(k=>k<m&&Object.values(db.budgets[k]).some(v=>v>0)).sort().pop();
+  $("#budCopy").innerHTML=!has&&prev?`<div class="card"><div class="mute">${monthName(m)} is a clean sheet. Start from last plan?</div><button class="btn alt" data-from="${prev}">Copy ${monthName(prev)} plan</button></div>`:"";
+  const rows=db.expCats.map((c,i)=>{const sp=by[c]||0,p=+plan[c]||0,pc=p?Math.min(100,sp/p*100):0;
+    return `<div style="padding:10px 0;border-bottom:1px dotted var(--gold)"><div class="bud"><b>${esc(c)}</b><span><button class="del" data-spend="${i}" aria-label="Log spending for ${esc(c)}" style="font-size:24px">＋</button><button class="del" data-ren="${i}" aria-label="Rename ${esc(c)}">✎</button><button class="del" data-rm="${i}" aria-label="Remove ${esc(c)}">×</button></span></div><div class="bud"><button class="lnk" data-open="${i}">${nu(sp)}${p?" of "+nu(p)+" · "+(p-sp<0?nu(sp-p)+" over":nu(p-sp)+" left"):" spent"}</button><input type="number" inputmode="decimal" data-b="${i}" value="${p||""}" placeholder="Plan"></div><div class="bar"><i class="${p&&sp>p?"over":""}" style="width:${pc}%"></i></div>${openCat===c?`<div class="sub">${tx.filter(t=>t.type==="expense"&&t.cat===c).map(rowHtml).join("")||'<div class="empty">No spending logged here yet.</div>'}</div>`:""}</div>`}).join("");
+  const unl=Object.entries(by).filter(([c])=>!db.expCats.includes(c)).reduce((a,[,v])=>a+v,0);
+  $("#budList").innerHTML=rows+(unl>0?`<div class="mute" style="padding:10px 0">Spent in removed categories: ${nu(unl)}</div>`:"");
+}
+
+function renderHist(){const ms=new Set([curM]);db.tx.forEach(t=>ms.add(t.date.slice(0,7)));Object.keys(db.budgets).forEach(k=>ms.add(k));
+  $("#hist").innerHTML=[...ms].sort().reverse().map(m=>{const tx=db.tx.filter(t=>t.date.startsWith(m));
+    return `<button class="hm" data-m="${m}"><div class="top"><b>${monthName(m)}</b><span class="mute">${tx.length} ${tx.length===1?"entry":"entries"}${m===curM?" · this month":""}</span></div><div class="hmv"><span class="inc">In ${nu(sum(tx,"income"))}</span><span class="exp">Out ${nu(sum(tx,"expense"))}</span><span class="sav">Saved ${nu(sum(tx,"saving"))}</span></div></button>`}).join("")}
+
+function renderGoals(){
+  $("#goalList").innerHTML=db.goals.length?db.goals.map(g=>{
+    const s=goalSaved(g.id),p=g.target?Math.min(100,s/g.target*100):0;let meta;
+    if(!g.target)meta="Tap Edit to set a target and see your progress.";
+    else if(s>=g.target)meta="Goal reached ❦";
+    else{meta=nu(g.target-s)+" to go";if(g.deadline){const d=Math.ceil((new Date(g.deadline)-new Date())/864e5);meta+=d>0?` · ${d} days left · about ${nu((g.target-s)/Math.max(1,d/30.4))} a month`:" · deadline passed"}}
+    return `<div class="card goal"><div class="top"><span class="nm">${esc(g.name)}</span><b>${Math.round(p)}%</b></div><div class="mute">${nu(s)}${g.target?" of "+nu(g.target):" saved"}</div><div class="bar"><i style="width:${p}%"></i></div><div class="mute" style="margin-top:6px">${meta}</div><div class="gb"><button data-gadd="${g.id}">Add savings</button><button data-gedit="${g.id}">Edit</button><button class="x" data-gdel="${g.id}">Remove</button></div></div>`}).join(""):'<div class="empty">No goals yet. Add one above.</div>';
+}
+
+function show(s){document.querySelectorAll("section").forEach(x=>x.classList.toggle("on",x.id===s));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.s===s));scrollTo(0,0)}
+function startEdit(id){const t=db.tx.find(x=>x.id==id);if(!t)return;editId=t.id;setType(t.type);
+  if(![...$("#cat").options].some(o=>o.value===t.cat))$("#cat").add(new Option(t.cat));
+  $("#amt").value=t.amt;$("#cat").value=t.cat;$("#date").value=t.date;$("#method").value=t.method;$("#note").value=t.note;$("#goalIn").value=t.type==="saving"?(goalName(t.goal)||t.cat):"";fillGoalSel();editUI(true);show("add")}
+function removeTx(id){const t=db.tx.find(x=>x.id==id);if(!t)return;db.tx=db.tx.filter(x=>x.id!=id);save();render();toast("Entry deleted",()=>{db.tx.push(t);save();render()})}
+function animateOut(id){const r=document.querySelector(`.row[data-id="${id}"]`);if(r){r.classList.add("out");setTimeout(()=>removeTx(id),190)}else removeTx(id)}
+
+$("#typeSeg").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset.t)};
+$("#goalIn").oninput=markGoal;
+$("#goalBtn").onclick=()=>menu($("#goalMenu").hidden);
+$("#goalMenu").onclick=e=>{const b=e.target.closest("button");if(b){$("#goalIn").value=b.dataset.v;markGoal();menu(false)}};
+document.addEventListener("click",e=>{if(!e.target.closest(".combo"))menu(false)});
+$("#chips").onclick=e=>{const b=e.target.closest("button");if(b){filt=b.dataset.f;render()}};
+$("#save").onclick=()=>{
+  const amt=parseFloat($("#amt").value);if(!(amt>0)){alert("Enter an amount above 0.");return}
+  let gid=null,cat=$("#cat").value;
+  if(type==="saving"){const gn=$("#goalIn").value.trim();if(!gn){alert("Choose a goal or type a new one.");return}
+    let g=db.goals.find(x=>x.name.toLowerCase()===gn.toLowerCase());if(!g){g={id:Date.now()+1,name:gn,target:0,deadline:""};db.goals.push(g)}gid=g.id;cat=g.name}
+  const o={type,amt,cat,date:$("#date").value||iso(today),method:$("#method").value,note:$("#note").value.trim(),goal:gid};
+  if(editId){Object.assign(db.tx.find(x=>x.id==editId),o)}else db.tx.push(Object.assign({id:Date.now()},o));
+  const was=!!editId;save();resetForm();$("#month").value=o.date.slice(0,7);render();show("home");toast(was?"Changes saved":"Entry saved")};
+$("#cancel").onclick=()=>{resetForm();show("home")};
+$("#delBtn").onclick=()=>{const id=editId;resetForm();show("home");removeTx(id)};
+$("#list").onclick=e=>{const d=e.target.closest("[data-del]"),ed=e.target.closest("[data-edit]");if(d)animateOut(d.dataset.del);else if(ed)startEdit(ed.dataset.edit)};
+$("#month").onchange=()=>{if(!$("#month").value)$("#month").value=curM;render()};
+document.querySelector("nav").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.s==="add"&&editId)resetForm();show(b.dataset.s)};
+
+/* budget categories */
+function addCat(){const n=$("#newCat").value.trim();if(!n)return;
+  if(db.expCats.some(c=>c.toLowerCase()===n.toLowerCase())){alert("That category already exists.");return}
+  db.expCats.push(n);$("#newCat").value="";save();fillCats();render();toast("Category added")}
+function renCat(i){const old=db.expCats[i],n=(prompt("Rename category",old)||"").trim();if(!n||n===old)return;
+  if(db.expCats.some((c,j)=>j!==i&&c.toLowerCase()===n.toLowerCase())){alert("That category already exists.");return}
+  db.expCats[i]=n;db.tx.forEach(t=>{if(t.type==="expense"&&t.cat===old)t.cat=n});
+  Object.values(db.budgets).forEach(p=>{if(old in p){p[n]=p[old];delete p[old]}});save();fillCats();render()}
+function rmCat(i){const name=db.expCats[i],kept={};Object.entries(db.budgets).forEach(([m,p])=>{if(name in p)kept[m]=p[name]});
+  db.expCats.splice(i,1);Object.values(db.budgets).forEach(p=>delete p[name]);save();fillCats();render();
+  toast("Category removed. Past entries keep their label.",()=>{db.expCats.splice(i,0,name);Object.entries(kept).forEach(([m,v])=>db.budgets[m][name]=v);save();fillCats();render()})}
+$("#addCat").onclick=addCat;
+$("#newCat").onkeydown=e=>{if(e.key==="Enter")addCat()};
+$("#budList").onclick=e=>{const q=k=>e.target.closest(k),sp=q("[data-spend]"),op=q("[data-open]"),dl=q("[data-del]"),ed=q("[data-edit]"),r=q("[data-ren]"),d=q("[data-rm]");
+  if(sp){resetForm();setType("expense");$("#cat").value=db.expCats[+sp.dataset.spend];show("add");$("#amt").focus()}
+  else if(op){const c=db.expCats[+op.dataset.open];openCat=openCat===c?null:c;render()}
+  else if(dl)animateOut(dl.dataset.del);else if(ed)startEdit(ed.dataset.edit);
+  else if(r){openCat=null;renCat(+r.dataset.ren)}else if(d){openCat=null;rmCat(+d.dataset.rm)}};
+$("#budList").onchange=e=>{const i=e.target.dataset.b;if(i===undefined)return;const m=gm();(db.budgets[m]=db.budgets[m]||{})[db.expCats[+i]]=+e.target.value||0;save();render()};
+$("#budCopy").onclick=e=>{const b=e.target.closest("button");if(b){db.budgets[gm()]=Object.assign({},db.budgets[b.dataset.from]);save();render()}};
+$("#hist").onclick=e=>{const b=e.target.closest("[data-m]");if(b){$("#month").value=b.dataset.m;filt="all";render();show("home")}};
+
+/* goals */
+function gReset(){editGoal=null;$("#gName").value="";$("#gTarget").value="";$("#gDate").value="";$("#gSave").textContent="Add goal";$("#gTitle").textContent="New savings goal";$("#gCancel").hidden=true}
+$("#gSave").onclick=()=>{const name=$("#gName").value.trim();if(!name){alert("Give your goal a name.");return}
+  const o={name,target:+$("#gTarget").value||0,deadline:$("#gDate").value};
+  if(editGoal)Object.assign(db.goals.find(g=>g.id==editGoal),o);else db.goals.push(Object.assign({id:Date.now()},o));
+  save();gReset();render();toast("Goal saved")};
+$("#gCancel").onclick=gReset;
+$("#goalList").onclick=e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+  if(d.gadd){resetForm();setType("saving");$("#goalIn").value=goalName(d.gadd);fillGoalSel();show("add");$("#amt").focus()}
+  else if(d.gedit){const g=db.goals.find(x=>x.id==d.gedit);editGoal=g.id;$("#gName").value=g.name;$("#gTarget").value=g.target||"";$("#gDate").value=g.deadline||"";$("#gSave").textContent="Save goal";$("#gTitle").textContent="Edit goal";$("#gCancel").hidden=false;scrollTo(0,0)}
+  else if(d.gdel){const g=db.goals.find(x=>x.id==d.gdel),linked=db.tx.filter(t=>t.goal==g.id);db.goals=db.goals.filter(x=>x.id!=g.id);linked.forEach(t=>t.goal=null);save();render();toast("Goal removed. Savings kept.",()=>{db.goals.push(g);linked.forEach(t=>t.goal=g.id);save();render()})}};
+
+/* backup */
+function dl(name,text,mime){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=name;a.click()}
+$("#exJson").onclick=()=>dl("nu-tracker-backup-"+iso(today)+".json",JSON.stringify(db),"application/json");
+$("#exCsv").onclick=()=>dl("nu-tracker-"+iso(today)+".csv","Date,Type,Category,Amount,Goal,Method,Note\n"+db.tx.map(t=>[t.date,t.type,'"'+t.cat.replace(/"/g,'""')+'"',t.amt,'"'+(goalName(t.goal)||"")+'"',t.method,'"'+t.note.replace(/"/g,'""')+'"'].join(",")).join("\n"),"text/csv");
+$("#imp").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.tx))throw 0;if(confirm("Replace current data with this backup?")){db=norm(d);save();fillCats();render();show("home")}}catch(x){alert("That file is not a valid backup.")}};r.readAsText(f)};
+$("#wipe").onclick=()=>{if(confirm("Delete ALL data on this device? This cannot be undone.")){db=norm({v:3});save();fillCats();render()}};
+
+/* GitHub sync */
+const b64=t=>btoa(unescape(encodeURIComponent(t))),unb64=t=>decodeURIComponent(escape(atob(t.replace(/\s/g,""))));
+const gmsg=t=>{$("#ghMsg").textContent=t};
+function ghCfg(){gh={repo:$("#ghRepo").value.trim(),path:$("#ghPath").value.trim()||"ledger.json",tok:$("#ghTok").value.trim(),auto:$("#ghAuto").checked};try{localStorage.setItem(GK,JSON.stringify(gh))}catch(e){}}
+function ghFetch(method,body){const u=`https://api.github.com/repos/${gh.repo}/contents/${gh.path.split("/").map(encodeURIComponent).join("/")}`;
+  return fetch(u,{method,cache:"no-store",headers:Object.assign({Accept:"application/vnd.github+json",Authorization:"Bearer "+gh.tok,"X-GitHub-Api-Version":"2022-11-28"},body?{"Content-Type":"application/json"}:{}),body:body?JSON.stringify(body):undefined})}
+async function ghErr(r){let m="";try{m=(await r.json()).message||""}catch(e){}return r.status===401?"The token was rejected (401). Check it has not expired.":r.status===403?"Not allowed (403). The token needs Contents: Read and write.":r.status===404?"Repository not found (404). Check the name and token access.":r.status+" "+m}
+async function ghPush(quiet){ghCfg();if(!gh.repo||!gh.tok){if(!quiet)gmsg("Add the repository and token first.");return}
+  gmsg("Saving…");
+  try{let sha;const g=await ghFetch("GET");if(g.ok)sha=(await g.json()).sha;else if(g.status!==404)throw new Error(await ghErr(g));
+    const r=await ghFetch("PUT",{message:"Ledger update "+new Date().toISOString(),content:b64(JSON.stringify(db,null,1)),sha});
+    if(!r.ok)throw new Error(await ghErr(r));gmsg("Saved to GitHub at "+new Date().toLocaleTimeString()+".")}
+  catch(e){gmsg("Could not save: "+e.message)}}
+async function ghPull(){ghCfg();if(!gh.repo||!gh.tok){gmsg("Add the repository and token first.");return}
+  gmsg("Loading…");
+  try{const g=await ghFetch("GET");if(g.status===404){gmsg("No saved file found yet. Tap Save to GitHub first.");return}
+    if(!g.ok)throw new Error(await ghErr(g));
+    const d=JSON.parse(unb64((await g.json()).content));if(!Array.isArray(d.tx))throw new Error("That file is not a ledger backup.");
+    if(confirm("Replace the data on this phone with the GitHub copy?")){db=norm(d);save();fillCats();render();show("home");gmsg("Loaded from GitHub.")}else gmsg("Load cancelled.")}
+  catch(e){gmsg("Could not load: "+e.message)}}
+$("#ghRepo").value=gh.repo||"";$("#ghPath").value=gh.path||"ledger.json";$("#ghTok").value=gh.tok||"";$("#ghAuto").checked=!!gh.auto;
+["#ghRepo","#ghPath","#ghTok","#ghAuto"].forEach(x=>$(x).onchange=ghCfg);
+$("#ghPush").onclick=()=>ghPush(false);$("#ghPull").onclick=ghPull;
+
+fillCats();render();
+</script>
+</body>
+</html>
